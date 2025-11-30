@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Habesha Kitchen</title>
+  <link rel="stylesheet" href="web/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .auth-card {
+      background: linear-gradient(135deg, rgba(255, 178, 0, 0.1), rgba(39, 195, 255, 0.08));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .auth-card h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    .auth-card p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--color-text-soft);
+    }
+    .auth-form .form-field {
+      margin-bottom: 20px;
+    }
+    .auth-form .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-soft);
+    }
+    .auth-form .form-field input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(5, 6, 8, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: var(--color-text);
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .auth-form .form-field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(255, 178, 0, 0.1);
+    }
+    .auth-form .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .auth-links {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--color-text-soft);
+    }
+    .auth-links a {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+    .error-message {
+      background: rgba(255, 77, 77, 0.15);
+      border: 1px solid rgba(255, 77, 77, 0.3);
+      color: #ff6b6b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: none;
+    }
+    .back-home {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .back-home a {
+      color: var(--color-text-soft);
+      font-size: 14px;
+      text-decoration: underline;
+    }
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .remember-forgot label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .remember-forgot input[type="checkbox"] {
+      width: auto;
+      cursor: pointer;
+    }
+    .remember-forgot a {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h1>Welcome Back!</h1>
+      <p>Login to your Habesha Kitchen account</p>
+      
+      <div class="error-message" id="errorMessage"></div>
+
+      <form class="auth-form" id="loginForm">
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required />
+        </div>
+
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        </div>
+
+        <div class="remember-forgot">
+          <label>
+            <input type="checkbox" id="rememberMe" />
+            Remember me
+          </label>
+          <a href="#" onclick="alert('Password reset feature coming soon!'); return false;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <div class="auth-links">
+        Don't have an account? <a href="register.html">Register here</a>
+      </div>
+
+      <div class="back-home">
+        <a href="web/index.html">← Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get form and error message elements
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Function to show error message
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+
+    // Check if user is already logged in
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      window.location.href = 'web/index.html';
+    }
+
+    // Handle form submission
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const rememberMe = document.getElementById('rememberMe').checked;
+
+      // Get users from localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      
+      // Find user with matching email and password
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (!user) {
+        showError('Invalid email or password!');
+        return;
+      }
+
+      // Save current user to localStorage
+      const userData = {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone,
+        loginTime: new Date().toISOString()
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+
+      // If remember me is checked, save for longer
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+      }
+
+      // Redirect to home page
+      window.location.href = 'web/index.html';
+    });
+  </script>
+</body>
+</html>
+
